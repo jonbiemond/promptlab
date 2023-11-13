@@ -19,6 +19,7 @@
 # misc
 .DS_Store
 *.pem
+.uuid
 
 # debug
 npm-debug.log*
@@ -27,6 +28,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -34,3 +36,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# JetBrains
+.idea/
+
+# Fleet
+.fleet/
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# VS Code
+.vscode/
