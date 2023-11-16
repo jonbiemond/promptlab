@@ -1,5 +1,4 @@
-import { SessionModel } from '../chat-session';
-import { MessageModel } from '../chat-message';
+import { SessionModel, MessageModel } from '../';
 
 describe('SessionModel', () => {
     let session: SessionModel;
