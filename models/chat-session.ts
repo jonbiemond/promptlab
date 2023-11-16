@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { MessageModel } from './chat-message';
+import { MessageModel } from './';
+import { Dao } from './dao';
 
 interface Session {
     id: string;
@@ -12,7 +13,7 @@ interface Session {
     messages?: MessageModel[];
 }
 
-class SessionModel implements Session {
+class SessionModel extends Dao<SessionModel> implements Session {
     public id: string;
     public type: string;
     public sessionId: string;
@@ -23,6 +24,7 @@ class SessionModel implements Session {
     public messages?: MessageModel[];
 
     constructor() {
+        super();
         this.id = uuidv4();
         this.type = 'Session';
         this.sessionId = this.id;
@@ -53,5 +55,5 @@ class SessionModel implements Session {
     }
 }
 
-export {SessionModel};    export type { Session };
+export { SessionModel };    export type { Session };
 
