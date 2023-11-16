@@ -1,4 +1,4 @@
-import { MessageModel} from "../chat-message";
+import { MessageModel} from "../";
 
 describe('MessageModel', () => {
     let message: MessageModel;

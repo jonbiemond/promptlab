@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
-    "test": "jest --config jest.config.cjs"
+    "test": "jest --config jest.config.cs"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
