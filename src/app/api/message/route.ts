@@ -12,14 +12,14 @@ export async function POST(req: Request) {
     });
 
     // get message from user
-    const { message } = await req.json();
+    const { userMessage: userMessage } = await req.json();
 
-    if (!message) {
-      return NextResponse.json({'message': 'Message is required'}, {status: 400})
+    if (!userMessage) {
+      return NextResponse.json({'userMessage': 'Message is required'}, {status: 400})
     }
 
     const chatCompletion = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: message }],
+      messages: [{ role: 'user', content: userMessage }],
       model: "gpt-3.5-turbo"
     });
 

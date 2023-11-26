@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import Link from 'next/link';
 
 type MessageType = {
   type: 'user' | 'bot';
@@ -12,7 +12,6 @@ type MessageType = {
 };
 
 type HomeProps = {
-  // Define any props your component may have
 };
 
 export default function Messages() {
@@ -22,11 +21,10 @@ export default function Messages() {
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
   const router = useRouter();
-  const [authenticated, setAuthenticated] = useState(false); // Example state for authentication
+  const [authenticated, setAuthenticated] = useState(false);
 
   // check authentication status
   useEffect(() => {
-
     const isAuthenticated = localStorage.getItem('isAuthenticated');
 
     // redirect to login or sign up if not authenticated
@@ -35,29 +33,41 @@ export default function Messages() {
     } else {
       setAuthenticated(true);
     }
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (userMessage.trim() !== '') {
+      // add the user message to the chat
       setMessages([...messages, { type: 'user', text: userMessage }]);
       setUserMessage('');
-    }
 
-    try {
-      // POST request
-      const response = await axios.post('/api/message/', { text: userMessage });
-      /*
-      response handling logic
-      */
-      console.log('Message sent:', response.data);
+      try {
+        // sending the POST request to the API endpoint
+        const response = await fetch('/api/message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userMessage,
+          }),
+        });
 
-    } catch (error) {
-      // Handle errors if the request fails
-      console.error('Error sending message:', error);
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
+        // handling the response from the api
+        const botMessage = await response.json();
+        
+        setMessages([...messages, { type: 'bot', text: botMessage }]);
+        // error handling
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
-  };
+  }
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -74,17 +84,21 @@ export default function Messages() {
         <button onClick={toggleDarkMode} className="bg-gray-700 text-white px-4 py-2 rounded cursor-pointer">
           Toggle Dark Mode
         </button>
-        <a className="px-4">Goals</a>
-        <a className="px-4">Logout</a>
+        <Link href="/goals">
+          Goals
+        </Link>
+        <Link href="/logout">
+          Logout
+        </Link>
       </header>
 
       <div className="wrapper">
         <main className="main-content flex-1 p-4">
-          <div className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
-            {messages.map((message, index) => (
-              <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
-                <p className="text-left">{message.text}</p>
-              </div>
+        <div className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
+      {messages.map((message, index) => (
+        <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
+          <p className="text-left">{message.text}</p>
+        </div>
             ))}
             <form onSubmit={handleSubmit} className="p-4">
               <input
