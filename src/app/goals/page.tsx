@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Goals = () => {
   const router = useRouter();
@@ -28,13 +29,16 @@ const Goals = () => {
   ];
 
   return (
-    <div>
+    <div className='text-center items-center h-screen justify-center flex flex-col'>
       <h1>Engineering Goals</h1>
+      <br />
       <ul>
         {goals.map((goal, index) => (
           <li key={index}>{goal}</li>
         ))}
       </ul>
+      <br />
+      <Link href={'/messages'}>Go Back</Link>
     </div>
   );
 };

@@ -83,7 +83,7 @@ export default function Messages() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="p-4 flex justify-between items-center">
+      <header className="p-4 flex justify-between items-center w-screen">
         <button onClick={toggleDarkMode} className="bg-gray-700 text-white px-4 py-2 rounded cursor-pointer">
           Toggle Dark Mode
         </button>
@@ -95,36 +95,38 @@ export default function Messages() {
         </Link>
       </header>
 
-      <div className="wrapper">
-        <main className="main-content flex-1 p-4">
-        <div className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
-      {messages.map((message, index) => (
-        <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
-          <p className="text-left">{message.text}</p>
-        </div>
+      <div className="wrapper ">
+        <main className="main-content flex-1 p-4 h-screen w-screen">
+          <div className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
+            {messages.map((message, index) => (
+              <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
+                <div className="chat chat-start">
+                  <p className="chat-bubble">{message.text}</p>
+                </div>
+              </div>
             ))}
-            <form onSubmit={handleSubmit} className="p-4">
+            <form onSubmit={handleSubmit} className="p-4 flex items-center justify-center ">
               <input
                 type="text"
                 id="request"
                 value={userMessage}
                 onChange={(e) => setUserMessage(e.target.value)}
                 placeholder="Send a message"
-                className="p-2 border border-gray-400 rounded mr-2"
+                className="p-2 w-11/12 border border-gray-400 rounded mr-2"
               />
               <input
                 type="submit"
                 value="Send"
-                className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
+                className="bg-blue-500 text-white px-10 py-2 rounded cursor-pointer"
               />
             </form>
           </div>
+          <footer className="p-4 flex justify-center items-center border-t border-gray-300">
+            Powered by ChatGPT
+          </footer>
         </main>
       </div>
 
-      <footer className="p-4 flex justify-center items-center border-t border-gray-300">
-        Powered by ChatGPT
-      </footer>
     </div>
   );
 }
