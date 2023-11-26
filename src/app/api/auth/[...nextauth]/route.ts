@@ -1,27 +1,25 @@
-import type { NextAuthOptions } from 'next-auth'
+import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-export const options: NextAuthOptions = {
-    
+export const authOptions  = {
     providers: [
-
         CredentialsProvider({
             name: "Credentials",
             credentials: {
                 username: {
                     label: "Username:",
                     type: "text",
-                    placeholder: "Username"
+                    // placeholder: "Username"
                 },
                 password: {
                     label: "Password:",
                     type: "password",
-                    placeholder: "Password"
+                    // placeholder: "Password"
                 }
             },
             async authorize(credentials) {
 
-                const user = { id: "0", name: "Sample", password: "Text" }
+                const user = { id: "1", name: "Sample", password: "12345" }
 
                 if (credentials?.username === user.name && credentials?.password === user.password) {
                     return user
@@ -32,3 +30,8 @@ export const options: NextAuthOptions = {
         })
     ],
 }
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }
+
+

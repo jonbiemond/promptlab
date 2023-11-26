@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const SignUp = () => {
 
@@ -9,7 +10,7 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignUp = (e: React.FormEvent) => {
     
     e.preventDefault();
     /*
@@ -19,9 +20,9 @@ const SignUp = () => {
   };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSignup}>
+    <div className='flex flex-col items-center my-5 align-middle text-center'>
+      <h1 className=' font-semibold text-2xl'>Sign Up</h1>
+      <form className='my-5' onSubmit={handleSignUp}>
         <div>
           <label htmlFor="email">Email:</label>
           <input
@@ -30,6 +31,7 @@ const SignUp = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className='text-black py-2 px-5'
           />
         </div>
         <div>
@@ -40,9 +42,14 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className='text-black py-2 px-5'
           />
         </div>
-        <button type="submit">Sign Up</button>
+        <div className='flex flex-col my-5 '>
+          <Link href={'/login'} className='hover:underline'>Already have an Account? Login HERE!</Link>
+          <button type="submit">Submit</button>
+          <Link href={'/'} className='hover:underline my-5'>Go Back</Link>
+        </div>
       </form>
     </div>
   );

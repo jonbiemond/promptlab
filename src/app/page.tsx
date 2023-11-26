@@ -18,11 +18,13 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <h1>Welcome!</h1>
+    <div className='flex flex-col justify-center items-center '>
+      <h1 className=' font-semibold text-2xl my-5'>Welcome!</h1>
       <p>Please select an option:</p>
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={handleSignup}>Sign Up</button>
+      <div className='flex gap-5 my-2'>
+        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleSignup}>Sign Up</button>
+      </div>
     </div>
   );
 };
