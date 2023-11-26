@@ -11,8 +11,6 @@ type MessageType = {
   text: string;
 };
 
-type HomeProps = {
-};
 
 export default function Messages() {
 
@@ -77,7 +75,7 @@ export default function Messages() {
   };
 
   return (
-    <div className={`container ${darkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <div className={`container ${darkMode ? 'bg-black text-white w-screen' : 'bg-white text-black w-screen'}`}>
       <Head>
         <title>Conscious Learning</title>
         <link rel="icon" href="/favicon.ico" />
@@ -95,8 +93,8 @@ export default function Messages() {
         </Link>
       </header>
 
-      <div className="wrapper ">
-        <main className="main-content flex-1 p-4 h-screen w-screen">
+      <div className="wrapper w-screen">
+        <main className="main-content flex-1 p-4 h-screen ">
           <div className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
             {messages.map((message, index) => (
               <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
