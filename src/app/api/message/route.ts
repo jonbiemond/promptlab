@@ -1,10 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
+import {NextResponse} from "next/server";
 
 dotenv.config();
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: Request) {
   try {
     // instance
     const openai = new OpenAI({
@@ -12,10 +12,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // get message from user
-    const { message } = req.body;
+    const { message } = await req.json();
 
     if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
+      return NextResponse.json({'message': 'Message is required'}, {status: 400})
     }
 
     const chatCompletion = await openai.chat.completions.create({
@@ -25,15 +25,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // check if choices array is empty
     if (!chatCompletion.choices || chatCompletion.choices.length === 0) {
-      return res.status(500).json({ error: 'No response from AI model' });
+      return NextResponse.json({'error': 'No response from AI model'}, {status: 500})
     }
 
     // JSON response with the result message
-    res.status(200).json(chatCompletion.choices[0]?.message?.content || 'No content available');
+    return NextResponse.json(chatCompletion.choices[0]?.message?.content || 'No text available', {status: 200});
   } catch (error) {
     console.error('An error occurred:', error);
-    res.status(500).json({ error: 'An error occurred' });
+    return NextResponse.json({'error': 'An error occurred'}, {status: 500})
   }
 }
-
-export default handler;
