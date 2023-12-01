@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 const Login = () => {
 
@@ -10,13 +11,22 @@ const Login = () => {
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
-    
     e.preventDefault();
-    /*
-    login logic here
-    */
-    localStorage.setItem('isAuthenticated', 'true');
-    router.push('/messages');
+
+    // uses next-auth and api/auth/[...nextauth]/options.tsx
+    const result = await signIn('credentials', {
+      redirect: false,
+      username,
+      password,
+    });
+
+    if (result?.error) {
+      // Handle login error
+      console.error('Login error:', result.error);
+    } else {
+      // Redirect to messages page upon successful login
+      router.push('/messages');
+    }
   };
 
   return (
