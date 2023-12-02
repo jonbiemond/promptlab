@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { MessageModel } from './';
 import { Dao } from './dao';
 
@@ -65,6 +64,11 @@ class SessionModel extends Dao<SessionModel> implements Session {
         if (index !== -1) {
             this.messages[index] = updatedMessage;
         }
+    }
+
+    public async update(): Promise<void> {
+        this.updatedAt = new Date();
+        await super.update();
     }
 }
 
