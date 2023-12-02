@@ -44,6 +44,10 @@ class SessionModel extends Dao<SessionModel> implements Session {
         return 'userId';
     }
 
+    protected uniqueKeyField(): string {
+        return '';
+    }
+
     public addMessage(message: MessageModel): void {
         if (!this.messages) {
             this.messages = [];
