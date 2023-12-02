@@ -11,7 +11,6 @@ interface User {
 }
 
 class UserModel extends Dao<UserModel> implements User {
-    public id: string;
     public type: string;
     public userId: string;
     public username: string;
@@ -20,7 +19,6 @@ class UserModel extends Dao<UserModel> implements User {
 
     constructor(username: string, password_hash: string) {
         super();
-        this.id = uuidv4();
         this.type = 'User';
         this.userId = this.id;
         this.username = username;
@@ -30,6 +28,10 @@ class UserModel extends Dao<UserModel> implements User {
 
     protected get containerId(): string {
         return 'user';
+    }
+
+    protected get partitionKeyField(): string {
+        return 'username';
     }
 
     public addSession(sessionId: string): void {

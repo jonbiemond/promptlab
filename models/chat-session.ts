@@ -6,6 +6,7 @@ interface Session {
     id: string;
     type: string;
     sessionId: string;
+    userId: string;
     tokensUsed?: number | null;
     name: string;
     createdAt: Date;
@@ -14,20 +15,20 @@ interface Session {
 }
 
 class SessionModel extends Dao<SessionModel> implements Session {
-    public id: string;
     public type: string;
     public sessionId: string;
+    public userId: string;
     public tokensUsed?: number | null;
     public name: string;
     public createdAt: Date;
     public updatedAt: Date;
     public messages?: MessageModel[];
 
-    constructor() {
+    constructor(userId: string) {
         super();
-        this.id = uuidv4();
         this.type = 'Session';
         this.sessionId = this.id;
+        this.userId = userId;
         this.tokensUsed = 0;
         this.createdAt = new Date();
         this.updatedAt = new Date();
@@ -37,6 +38,10 @@ class SessionModel extends Dao<SessionModel> implements Session {
 
     protected get containerId(): string {
         return 'chat';
+    }
+
+    protected get partitionKeyField(): string {
+        return 'userId';
     }
 
     public addMessage(message: MessageModel): void {
