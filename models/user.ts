@@ -1,13 +1,13 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Dao } from "./dao";
+import { database } from "./db";
 
 interface User {
-    id: string;
-    type: string;
-    userId: string;
-    username: string;
-    password_hash: string;
-    recentSessions?: string[];
+  id: string;
+  type: string;
+  userId: string;
+  username: string;
+  password_hash: string;
+  recentSessions?: string[];
 }
 
 class UserModel extends Dao<UserModel> implements User {
@@ -49,4 +49,19 @@ class UserModel extends Dao<UserModel> implements User {
     }
 }
 
-export { UserModel };    export type { User };
+async function get_user(username: string): Promise<UserModel> {
+    const container = database.container("user");
+    const querySpec = {
+        query: "SELECT * FROM user WHERE user.username = @uniqueKey",
+        parameters: [
+            {
+                name: '@uniqueKey',
+                value: username
+            }
+        ]
+    };
+    const { resources: results } = await container.items.query(querySpec).fetchAll();
+    return results[0];
+}
+
+export { UserModel, get_user };    export type { User };
