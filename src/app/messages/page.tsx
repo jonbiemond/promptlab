@@ -61,7 +61,10 @@ export default function Messages() {
         // handling the response from the api
         const botMessage = await response.json();
         
-        setMessages([...messages, { type: 'bot', text: botMessage }]);
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { type: 'bot', text: botMessage },
+        ]);
         // error handling
       } catch (error) {
         console.error('Error sending message:', error);
