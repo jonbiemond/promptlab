@@ -20,8 +20,14 @@ jest.mock('@azure/cosmos', () => {
 describe('Dao', () => {
     let dao: Dao<SessionModel>;
 
+    class TestDao extends Dao<SessionModel> {
+        protected get containerId(): string {
+            return 'test-container-id';
+        }
+    }
+
     beforeEach(() => {
-        dao = new Dao();
+        dao = new TestDao();
     });
 
     test('saveToDatabase calls the create method on CosmosClient', async () => {

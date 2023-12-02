@@ -8,14 +8,16 @@ const client = new CosmosClient({
 
 const database = client.database(config.databaseId);
 
-class Dao<T> {
+abstract class Dao<T> {
+    protected abstract get containerId(): string;
+
     public async saveToDatabase(): Promise<void> {
-        const container = database.container(config.containerId);
+        const container = database.container(this.containerId);
         await container.items.create(this);
     }
 
     public async getFromDatabase(id: string): Promise<T> {
-        const container = database.container(config.containerId);
+        const container = database.container(this.containerId);
         const { resource: retrievedItem } = await container.item(id).read();
         return retrievedItem;
     }

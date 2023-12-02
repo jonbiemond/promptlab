@@ -6,7 +6,6 @@ config.host = process.env.COSMOS_ENDPOINT || "[the endpoint URI of your Azure Co
 config.authKey =
     process.env.COSMOS_KEY || "[the PRIMARY KEY value of your Azure Cosmos DB account";
 config.databaseId = "promptlab-test";
-config.containerId = "chat";
 
 if (config.host.includes("https://localhost:")) {
     console.log("Local environment detected");
