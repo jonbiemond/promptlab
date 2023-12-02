@@ -1,13 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { CosmosClient } from '@azure/cosmos';
-import config from '../config';
-
-const client = new CosmosClient({
-    endpoint: config.host,
-    key: config.authKey
-});
-
-const database = client.database(config.databaseId);
+import { database } from "./db";
 
 abstract class Dao<T> {
     [key: string]: any;
@@ -44,30 +36,45 @@ abstract class Dao<T> {
                 ]
             }
         }
-        const responseContainer = await database.containers.createIfNotExists(containerDef);
-        const container =  responseContainer.container;
-        console.log(`Container Created ${this.containerId}`);
+        await database.containers.createIfNotExists(containerDef);
     }
 
     protected constructor() {
         this.id = uuidv4();
     }
 
+    /**
+     * Save a new object to the database.
+     */
     public async save(): Promise<void> {
         await this.initContainer();
         const container = database.container(this.containerId);
         await container.items.create(this);
     }
 
+    /**
+     * Get this object from the database.
+     */
     public async get(): Promise<T> {
         const container = database.container(this.containerId);
         const { resource: retrievedItem } = await container.item(this.id, this[this.partitionKeyField]).read();
         return retrievedItem;
     }
 
+    /**
+     * Update an object in the database.
+     */
     public async update(): Promise<void> {
         const container = database.container(this.containerId);
         await container.item(this.id).replace(this);
+    }
+
+    /**
+     * Delete an object from the database.
+     */
+    public async delete(): Promise<void> {
+        const container = database.container(this.containerId);
+        await container.item(this.id).delete();
     }
 }
 
