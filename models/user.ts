@@ -34,6 +34,10 @@ class UserModel extends Dao<UserModel> implements User {
         return 'username';
     }
 
+    protected uniqueKeyField(): string {
+        return 'username';
+    }
+
     public addSession(sessionId: string): void {
         if (!this.recentSessions) {
             this.recentSessions = [];
