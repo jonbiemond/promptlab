@@ -35,6 +35,10 @@ class SessionModel extends Dao<SessionModel> implements Session {
         this.messages = [];
     }
 
+    protected get containerId(): string {
+        return 'chat';
+    }
+
     public addMessage(message: MessageModel): void {
         if (!this.messages) {
             this.messages = [];
