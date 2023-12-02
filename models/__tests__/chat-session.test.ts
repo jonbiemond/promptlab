@@ -4,7 +4,7 @@ describe('SessionModel', () => {
     let session: SessionModel;
 
     beforeEach(() => {
-        session = new SessionModel();
+        session = new SessionModel('userId');
     });
 
     test('addMessage adds a message to the session', () => {

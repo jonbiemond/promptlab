@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { CosmosClient } from '@azure/cosmos';
 import config from '../config';
 
@@ -9,17 +10,42 @@ const client = new CosmosClient({
 const database = client.database(config.databaseId);
 
 abstract class Dao<T> {
+    [key: string]: any;
+    public id: string;
     protected abstract get containerId(): string;
+    protected abstract get partitionKeyField(): string;
 
-    public async saveToDatabase(): Promise<void> {
+    private async initContainer(): Promise<void> {
+        const containerDef = {
+            id: this.containerId,
+            partitionKey: {
+                paths: [`/${this.partitionKeyField}`]
+            }
+        };
+        const responseContainer = await database.containers.createIfNotExists(containerDef);
+        const container =  responseContainer.container;
+        console.log(`Container Created ${this.containerId}`);
+    }
+
+    protected constructor() {
+        this.id = uuidv4();
+    }
+
+    public async save(): Promise<void> {
+        await this.initContainer();
         const container = database.container(this.containerId);
         await container.items.create(this);
     }
 
-    public async getFromDatabase(id: string): Promise<T> {
+    public async get(): Promise<T> {
         const container = database.container(this.containerId);
-        const { resource: retrievedItem } = await container.item(id).read();
+        const { resource: retrievedItem } = await container.item(this.id, this[this.partitionKeyField]).read();
         return retrievedItem;
+    }
+
+    public async update(): Promise<void> {
+        const container = database.container(this.containerId);
+        await container.item(this.id).replace(this);
     }
 }
 
