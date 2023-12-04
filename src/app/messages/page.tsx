@@ -61,7 +61,7 @@ export default function Messages() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-  
+
   if (session && status === 'authenticated') {
     return (
       <div className={`container ${darkMode ? 'bg-black text-white w-screen' : 'bg-white text-black w-screen'}`}>
@@ -85,8 +85,8 @@ export default function Messages() {
 
         <div className="wrapper w-screen flex">
           <main className="main-content flex-1 p-4 h-screen ">
-            <section className='text-4xl font-bold'>
-              Welome {session.user?.name}!
+            <section className='text-4xl font-semithin'>
+              Welcome <strong>{session.user?.name}</strong> :)
               <div className='divider divider-primary' ></div>
             </section>
             <section className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
