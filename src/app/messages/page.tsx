@@ -3,8 +3,10 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import Footer from '../_components/Footer';
 
 type MessageType = {
   type: 'user' | 'bot';
@@ -13,25 +15,11 @@ type MessageType = {
 
 
 export default function Messages() {
-
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [userMessage, setUserMessage] = useState<string>('');
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
-  const router = useRouter();
-  const [authenticated, setAuthenticated] = useState(false);
-
-  // check authentication status
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-
-    // redirect to login or sign up if not authenticated
-    if (!isAuthenticated) {
-      router.push('/');
-    } else {
-      setAuthenticated(true);
-    }
-  }, [router]);
+  const { data: session, status } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +46,7 @@ export default function Messages() {
         }
         // handling the response from the api
         const botMessage = await response.json();
-        
+
         setMessages(prevMessages => [
           ...prevMessages,
           { type: 'bot', text: botMessage },
@@ -73,58 +61,66 @@ export default function Messages() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+  
+  if (session && status === 'authenticated') {
+    return (
+      <div className={`container ${darkMode ? 'bg-black text-white w-screen' : 'bg-white text-black w-screen'}`}>
+        <Head>
+          <title>Conscious Learning</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-  return (
-    <div className={`container ${darkMode ? 'bg-black text-white w-screen' : 'bg-white text-black w-screen'}`}>
-      <Head>
-        <title>Conscious Learning</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+        <header className="p-4 flex justify-between items-center w-screen">
+          <button onClick={toggleDarkMode} className="btn btn-wide hover:btn-primary hover:text-white text-white cursor-pointer">
+            Toggle Dark Mode
+          </button>
+          <Link className='btn btn-wide hover:btn-primary hover:text-white text-white' href="/goals">
+            Goals
+          </Link>
 
-      <header className="p-4 flex justify-between items-center w-screen">
-        <button onClick={toggleDarkMode} className="bg-gray-700 text-white px-4 py-2 rounded cursor-pointer">
-          Toggle Dark Mode
-        </button>
-        <Link href="/goals">
-          Goals
-        </Link>
-        <Link href="/logout">
-          Logout
-        </Link>
-      </header>
+          <Link className='btn btn-wide hover:btn-primary hover:text-white text-white' href="/logout">
+            Logout
+          </Link>
+        </header>
 
-      <div className="wrapper w-screen">
-        <main className="main-content flex-1 p-4 h-screen ">
-          <div className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
-            {messages.map((message, index) => (
-              <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
-                <div className="chat chat-start">
-                  <p className="chat-bubble">{message.text}</p>
+        <div className="wrapper w-screen flex">
+          <main className="main-content flex-1 p-4 h-screen ">
+            <section className='text-4xl font-bold'>
+              Welome {session.user?.name}!
+              <div className='divider divider-primary' ></div>
+            </section>
+            <section className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
+              {messages.map((message, index) => (
+                <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
+                  <div className="chat chat-start">
+                    <p className="chat-bubble">{message.text}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-            <form onSubmit={handleSubmit} className="p-4 flex items-center justify-center ">
-              <input
-                type="text"
-                id="request"
-                value={userMessage}
-                onChange={(e) => setUserMessage(e.target.value)}
-                placeholder="Send a message"
-                className="p-2 w-11/12 border border-gray-400 rounded mr-2"
-              />
-              <input
-                type="submit"
-                value="Send"
-                className="bg-blue-500 text-white px-10 py-2 rounded cursor-pointer"
-              />
-            </form>
-          </div>
-          <footer className="p-4 flex justify-center items-center border-t border-gray-300">
-            Powered by ChatGPT
-          </footer>
-        </main>
+              ))}
+              <form onSubmit={handleSubmit} className="p-4 flex items-center justify-center ">
+                <input
+                  type="text"
+                  id="request"
+                  value={userMessage}
+                  onChange={(e) => setUserMessage(e.target.value)}
+                  placeholder="Send a message"
+                  className=" text-white py-2 input input-bordered w-full mr-5"
+                />
+                <button
+                  type="submit"
+                  value="Send"
+                  className="btn btn-primary text-white px-10 cursor-pointer"
+                >
+                  Send
+                </button>
+              </form>
+            </section>
+            <Footer />
+          </main>
+        </div>
       </div>
-
-    </div>
-  );
+    );
+  } else {
+    redirect('./login')
+  }
 }

@@ -18,12 +18,13 @@ const Home = () => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center '>
-      <h1 className=' font-semibold text-2xl my-5'>Welcome!</h1>
+    <div className='flex flex-col justify-center items-center h-screen'>
+      <h1 className=' font-semibold text-4xl my-5'>Welcome to PromptLab!</h1>
       <p>Please select an option:</p>
+      <br/>
       <div className='flex gap-5 my-2'>
-        <button onClick={handleLogin}>Login</button>
-        <button onClick={handleSignup}>Sign Up</button>
+        <button className='btn btn-neutral hover:btn-primary text-white px-10 uppercase hover:text-white' onClick={handleLogin}>Login</button>
+        <button className='btn btn-neutral hover:btn-primary text-white px-10 uppercase hover:text-white' onClick={handleSignup}>Sign Up</button>
       </div>
     </div>
   );

@@ -1,23 +1,12 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 const Goals = () => {
-  const router = useRouter();
-  const [authenticated, setAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-
-    // redirect to login or sign up if not authenticated
-    if (!isAuthenticated) {
-      router.push('/');
-    } else {
-      setAuthenticated(true);
-    }
-  }, [router]);
+  const { data: session, status } = useSession();
 
   const goals = [
     'Improve code quality through consistent code reviews.',
@@ -27,20 +16,24 @@ const Goals = () => {
     'Adopt best practices for security in development and deployment.',
     'Encourage and support learning and growth among team members.',
   ];
+  if (session && status === 'authenticated') {
+    return (
+      <div className=' items-center h-screen justify-center flex flex-col'>
+        <h1 className='text-4xl font-bold'>Engineering Goals</h1>
+        <br />
+        <ul>
+          {goals.map((goal, index) => (
+            <p key={index}>{index + 1}. {goal}</p>
+          ))}
+        </ul>
+        <br />
 
-  return (
-    <div className='text-center items-center h-screen justify-center flex flex-col'>
-      <h1>Engineering Goals</h1>
-      <br />
-      <ul>
-        {goals.map((goal, index) => (
-          <li key={index}>{goal}</li>
-        ))}
-      </ul>
-      <br />
-      <Link href={'/messages'}>Go Back</Link>
-    </div>
-  );
+        <Link href={'/messages'} className='btn btn-wide hover:btn-primary btn-outline btn-primary'>Go Back</Link>
+      </div>
+    );
+  } else {
+    redirect('/login')
+  }
 };
 
 export default Goals;

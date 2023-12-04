@@ -21,9 +21,10 @@ const Login = () => {
       username: formData.get('username'),
       password: formData.get('password'),
       redirect: true,
-      callbackUrl: '/'
+      callbackUrl: '/messages'
     })
 
+    console.log(result)
     // if (res.ok && (res.status !== 500 || 400 )) {
     //     router.push("/home")
     //     router.refresh()
@@ -31,25 +32,26 @@ const Login = () => {
     localStorage.setItem('isAuthenticated', 'true');
     router.push('/messages');
   };
-
+  
   return (
-    <div className='flex flex-col items-center my-5 text-center'>
-      <h1 className=' font-semibold text-2xl'>Login</h1>
+    <div className='flex flex-col items-center text-center h-screen justify-center'>
+      <h1 className=' font-bold text-4xl text-center'>Login</h1>
+      <br/>
       <form className='my-5' onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
+        <div className='gap-4 label'>
+        <span className="label-text">Username</span>
           <input
             type="text"
             id="username"
-            name='pasword'
+            name='username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            className='text-black py-2 px-5'
+            className='text-white py-2 px-5 input input-bordered w-full max-w-xs'
           />
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
+        <div className='label gap-4'>
+        <span className="label-text">Password</span>
           <input
             type="password"
             id="password"
@@ -57,13 +59,14 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className='text-black py-2 px-5'
+            className='text-white py-2 px-5 input input-bordered w-full max-w-xs'
           />
         </div>
-        <div className='flex flex-col my-5 '>
-          <Link href={'/signup'} className='hover:underline'>Don't have an Account? Sign Up!</Link>
-          <button type="submit">Login</button>
-          <Link href={'/'} className='hover:underline my-5'>Go Back</Link>
+        <div className='flex flex-col my-5 items-center '>
+          <Link href={'/signup'} className='hover:underline link link-white'>Don't have an Account? Sign Up!</Link>
+          <br/>
+          <button type="submit" className='btn btn-wide text-white btn-primary hover:btn-neutral'>Login</button>
+          <Link href={'/'} className='hover:underline my-5 btn btn-outline btn-primary btn-wide'>Go Home</Link>
         </div>
       </form>
     </div>
