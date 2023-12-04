@@ -18,8 +18,15 @@ export async function POST(req: Request) {
       return NextResponse.json({'userMessage': 'Message is required'}, {status: 400})
     }
 
+    // the user message will be appended to it in the prompt given to the bot
+    const prefix = `You are an LLM prompt instructor, your goal is to teach users how 
+    to write effective prompts for LLMs. Given the user prompt, answer their query and 
+    provide feedback on how they could improve their query in the area of clarity, scope 
+    and improvement. Format your response as JSON it should have the following structure: 
+    {"query_response": "", "feedback": {"clarity": "", "scope": "", "improvement":""}} User prompt: `;
+    
     const chatCompletion = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: userMessage }],
+      messages: [{ role: 'user', content: (prefix + userMessage) }],
       model: "gpt-3.5-turbo"
     });
 
