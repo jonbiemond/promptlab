@@ -13,11 +13,12 @@ export default function Footer() {
                 </nav>
                 <nav>
                     <header className="footer-title">Credits</header>
-                    <p className="link link-hover">Derek ______</p>
+                    <p className="link link-hover">Derek D'Souza</p>
+                    <p className="link link-hover">Dustin Denvers</p>
                     <p className="link link-hover">Edward Naidoo</p>
+                    <p className="link link-hover">Jonathon Biemond</p>
+                    <p className="link link-hover">Kenny Cheng</p>
                     <p className="link link-hover">Walter Yeung</p>
-                    <p className="link link-hover">Kenny _____</p>
-                    <p className="link link-hover">Jonathon ______</p>
                 </nav>
                 <nav>
                     <header className="footer-title">Socials</header>
