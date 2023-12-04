@@ -2,6 +2,10 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 export const authOptions  = {
+    page: {
+        signIn: '/login',
+        error: '/login'
+    },
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -23,6 +27,8 @@ export const authOptions  = {
 
                 if (credentials?.username === user.name && credentials?.password === user.password) {
                     return user
+                } else if (credentials?.username === user.name || credentials?.password === user.password) {
+                    return null
                 } else {
                     return null
                 }
