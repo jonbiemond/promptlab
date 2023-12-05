@@ -45,11 +45,27 @@ export default function Messages() {
           throw new Error('Network response was not ok.');
         }
         // handling the response from the api
-        const botMessage = await response.json();
+        const botResponseJSON = JSON.parse(await response.json());
+
+        const formattedResponse = 
+        `
+          <br>
+          <div style="max-width: 50%;">
+            <p><strong>Response:</strong> ${botResponseJSON.query_response}</p>
+            <br>
+            <p><strong>Feedback:</strong></p>
+            <ul style="word-wrap: break-word;">
+              <li><strong>Clarity:</strong> ${botResponseJSON.feedback.clarity}</li>
+              <li><strong>Scope:</strong> ${botResponseJSON.feedback.scope}</li>
+              <li><strong>Improvement:</strong> ${botResponseJSON.feedback.improvement}</li>
+            </ul>
+          </div>
+          <br>
+        `;
 
         setMessages(prevMessages => [
           ...prevMessages,
-          { type: 'bot', text: botMessage },
+          { type: 'bot', text: formattedResponse },
         ]);
         // error handling
       } catch (error) {
@@ -90,13 +106,18 @@ export default function Messages() {
               <div className='divider divider-primary' ></div>
             </section>
             <section className={`chat ${sidebarVisible ? 'with-sidebar' : ''}`}>
-              {messages.map((message, index) => (
-                <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
-                  <div className="chat chat-start">
-                    <p className="chat-bubble">{message.text}</p>
-                  </div>
-                </div>
-              ))}
+            {messages.map((message, index) => (
+              // distinguishes between user and bot messages
+              // to use dangerouslySetInnerHTML for bot messages ONLY
+              // to restrict user messages to only strings to avoid potential XSS attacks
+              <div key={index} className={message.type === 'user' ? 'userMessage' : 'botMessage'}>
+                {message.type === 'user' ? (
+                <p className="text-left">{message.text}</p>
+                ) : ( 
+                <div dangerouslySetInnerHTML={{ __html: message.text }} />
+                )}
+      </div>
+            ))}
               <form onSubmit={handleSubmit} className="p-4 flex items-center justify-center ">
                 <input
                   type="text"
