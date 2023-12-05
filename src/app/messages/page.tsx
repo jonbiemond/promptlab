@@ -45,7 +45,16 @@ export default function Messages() {
           throw new Error('Network response was not ok.');
         }
         // handling the response from the api
-        const botResponseJSON = JSON.parse(await response.json());
+        const botResponse = await response.json();
+
+        // attempts to convert the response into JSON,
+        // checks if ChatGPT output the correct string
+        let botResponseJSON;
+        try {
+          botResponseJSON = JSON.parse(botResponse);
+        } catch (error) {
+          throw new Error('ChatGPT output incorrect JSON formatting, try again.');
+        }
 
         const formattedResponse = 
         `
