@@ -49,3 +49,6 @@ next-env.d.ts
 
 # VS Code
 .vscode/
+
+# scripts
+/discovery.ts

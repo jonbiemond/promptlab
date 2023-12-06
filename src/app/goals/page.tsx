@@ -27,7 +27,8 @@ const Goals = () => {
           ))}
         </ul>
         <br />
-
+        
+        <Link href={'/goals/add'} className='btn btn-wide hover:btn-primary btn-primary'>Add Goal</Link>
         <Link href={'/messages'} className='btn btn-wide hover:btn-primary btn-outline btn-primary'>Go Back</Link>
       </div>
     );
