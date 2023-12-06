@@ -15,6 +15,8 @@ export async function POST(req: Request) {
         key
     })
 
+    // const client = new Dao()
+
     const goal = await req.json()
     try {
         // instance
@@ -24,11 +26,8 @@ export async function POST(req: Request) {
         //     .items.readAll()
         //     .fetchAll();
 
+    
         
-
-        // const createGoals = await database.users.create({
-            
-        // })
         
         // JSON response with the result message
         // return NextResponse.json();
